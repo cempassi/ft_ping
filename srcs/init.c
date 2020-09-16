@@ -6,48 +6,80 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 02:05:55 by cempassi          #+#    #+#             */
-/*   Updated: 2020/09/07 02:14:07 by cempassi         ###   ########.fr       */
+/*   Updated: 2020/09/16 06:58:54 by cempassi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
+#include "stdio.h"
 
 static int parse_opt(t_ping *ping, t_opt *option, int ac, char **av)
 {
-	char opt;
+	char  opt;
 	char *optarg;
 
 	while ((opt = ft_getopt(ac, av, option, &optarg)) != -1)
 	{
 		if (opt == 'v')
-			ping->option |= OPT_V;
+			ping->options |= OPT_V;
 		else if (opt == 'h')
-			ping->option |= OPT_H;
+			ping->options |= OPT_H;
 		else if (opt == 'c')
 		{
 			if (!ft_strcheck(optarg, ft_isdigit))
 			{
-				ft_dprintf(2, "%s: illegal option arg -- %s\n", av[0], OPT_C_ERROR);
+				ft_dprintf(2, "%s: illegal option arg -- %s\n", av[0],
+						   OPT_C_ERROR);
 				return (-1);
 			}
-			ping->option |= OPT_C;
+			ping->options |= OPT_C;
 		}
 	}
 	return (0);
 }
 
-int 	init_socket(t_ping *ping, char **av)
+int debug_socket(t_ping *ping)
 {
-	ping->socket = socket(PF_INET, SOCK_RAW, IPPROTO_ICMP);
-	if (ping->socket == -1)
+	t_socket *sock;
+	int debug;
+
+	sock = &ping->socket;
+	debug = 1;
+	if (ping->options & OPT_SO_DEBUG)
 	{
-		ft_dprintf(STDERR_FILENO, "%s: Socket allocation failed\n", av[0]);
-		return (-1);
+		if (setsockopt(sock->fd, IPPROTO_IP, SO_DEBUG, &debug, sizeof(int)))
+		{
+			ft_dprintf(2, "%s: SO_DEBUG configuration failed\n", ping->name);
+			return (-1);
+		}
 	}
 	return (0);
 }
 
-int 	init_prgm(t_ping *ping, int ac, char **av)
+int init_socket(t_ping *ping)
+{
+	t_socket *sock;
+
+	sock = &ping->socket;
+	if ((sock->fd = socket(PF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0)
+	{
+		ft_dprintf(STDERR_FILENO, "%s: Socket allocation failed\n", ping->name);
+		return (-1);
+	}
+	if (setsockopt(sock->fd, IPPROTO_IP, IP_TTL, &(sock->ttl), sizeof(uint8_t *)) < 0)
+	{
+		ft_dprintf(STDERR_FILENO, "%s: ttl configuration failed\n", ping->name);
+		return (-1);
+	}
+	if (setsockopt(sock->fd, IPPROTO_IP, IP_TOS, &(sock->tos), sizeof(uint8_t *)))
+	{
+		ft_dprintf(STDERR_FILENO, "%s: Tos configuration failed\n", ping->name);
+		return (-1);
+	}
+	return (debug_socket(ping));
+}
+
+int init_prgm(t_ping *ping, int ac, char **av)
 {
 	t_opt option;
 	char *optarg;
@@ -55,18 +87,22 @@ int 	init_prgm(t_ping *ping, int ac, char **av)
 
 	ft_bzero(ping, sizeof(struct s_ping));
 	ft_bzero(&option, sizeof(t_opt));
+	ping->name = av[0];
+	ping->packet_size = DEFAULT_PACKET_SIZE;
+	ping->payload = DEFAULT_PAYLOAD;
+	ping->socket.ttl = DEFAULT_TTL;
+	ping->socket.tos = ICMP_TOS;
 	option.optstr = OPTSTR;
 	optarg = NULL;
-	ping->packet_size = 42;
 	if ((error = ft_getopt(ac, av, &option, &optarg)) != 0)
 	{
 		if (option.error)
-			ft_dprintf(2, "%s: illegal option -- %s\n",av[0],  option.error);
+			ft_dprintf(2, "%s: illegal option -- %s\n", av[0], option.error);
 		else
-			ft_dprintf(2, "%s: illegal option -- %c\n",av[0],  error);
-		return (error);
-	}
-	if(parse_opt(ping, &option, ac, av) || init_socket(ping, av))
+			ft_dprintf(2, "%s: illegal option -- %c\n", av[0], error);
 		return (-1);
-	return (0);
+	}
+	if (parse_opt(ping, &option, ac, av))
+		return (-1);
+	return (init_socket(ping));
 }
