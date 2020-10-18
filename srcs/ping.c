@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 10:24:11 by cempassi          #+#    #+#             */
-/*   Updated: 2020/09/20 13:11:45 by cempassi         ###   ########.fr       */
+/*   Updated: 2020/10/18 12:14:37 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,11 @@ static int ping_loop(t_ping *ping, t_addrinfo *host, t_packet *packet)
 		packet->header.checksum = 0;
 		packet->header.echo.seq = seq;
 		packet->header.checksum = checksum(packet, ping->packet_size);
-		if (send_packet(ping, host, packet, &diff) || recv_packet(ping, &diff)
-			|| waiter(ping))
+		if (send_packet(ping, host, packet, &diff))
+		{
+			return (-1);
+		}
+		if (recv_packet(ping, &diff) || waiter(ping))
 		{
 			return (-1);
 		}
@@ -98,7 +101,7 @@ static int ping_loop(t_ping *ping, t_addrinfo *host, t_packet *packet)
 int run_ping(t_ping *ping)
 {
 	struct addrinfo *host;
-	t_packet *		 packet;
+	t_packet 		 *packet;
 
 	if ((packet = generate_packet(ping)) == NULL)
 	{

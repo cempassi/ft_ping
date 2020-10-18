@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 13:19:10 by cempassi          #+#    #+#             */
-/*   Updated: 2020/09/20 13:39:13 by cempassi         ###   ########.fr       */
+/*   Updated: 2020/10/18 12:24:40 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void display_recv(t_ping *ping, t_iphdr *iph, t_packet *packet, t_time *diff)
 	char src[INET_ADDRSTRLEN];
 
 	inet_ntop(AF_INET, &iph->saddr, src, INET_ADDRSTRLEN);
-	ft_printf("%d bytes from %s: icmp_seq=%d ttl=%d time=%f\n",
+	ft_printf("%d bytes from %s: icmp_seq=%u ttl=%d time=%f\n",
 			  ping->packet_size, src, packet->header.echo.seq, iph->ttl,
 			  diff->sent.tv_usec - diff->recieved.tv_usec);
 }

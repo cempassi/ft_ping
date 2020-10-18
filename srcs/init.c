@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 02:05:55 by cempassi          #+#    #+#             */
-/*   Updated: 2020/09/20 13:39:36 by cempassi         ###   ########.fr       */
+/*   Updated: 2020/10/18 11:44:08 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int parse_opt(t_ping *ping, t_opt *option, int ac, char **av)
 	char  opt;
 	char *optarg;
 
-	while ((opt = ft_getopt(ac, av, option, &optarg)) != -1)
+	while ((opt = ft_getopt(ac, av, option, &optarg)) > 0)
 	{
 		if (opt == 'v')
 			ping->options |= OPT_V;
