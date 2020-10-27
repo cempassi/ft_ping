@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 05:03:31 by cempassi          #+#    #+#             */
-/*   Updated: 2020/10/09 18:59:13 by cempassi         ###   ########.fr       */
+/*   Updated: 2020/10/27 17:37:07 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ typedef struct s_socket
 typedef struct s_time
 {
 	struct timeval sent;
-	struct timeval recieved;
+	struct timeval recv;
 } t_time;
 
 typedef struct s_iphdr
@@ -126,8 +126,8 @@ typedef struct s_ping
 int		 init_prgm(t_ping *ping, int ac, char **av);
 uint16_t checksum(void *addr, int count);
 
-int send_packet(t_ping *ping, t_addrinfo *host, t_packet *packet, t_time *diff);
-int recv_packet(t_ping *ping, t_time *diff);
+int send_packet(t_ping *ping, t_addrinfo *host, t_packet *packet);
+int recv_packet(t_ping *ping);
 int run_ping(t_ping *ping);
 
 void sig_interupt(int signo);
@@ -135,5 +135,5 @@ int waiter(t_ping *ping);
 int validate_ping(t_ping *ping, uint16_t seq);
 
 void display_start(t_ping *ping, struct addrinfo *host);
-void display_recv(t_ping *ping, t_iphdr *iph, t_packet *packet, t_time *diff);
+void display_recv(t_ping *ping, t_iphdr *iph, t_packet *packet);
 #endif
