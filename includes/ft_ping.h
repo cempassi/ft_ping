@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 05:03:31 by cempassi          #+#    #+#             */
-/*   Updated: 2020/10/27 17:37:07 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/10/28 01:47:01 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,18 @@ typedef struct s_packet
 	char 		  payload[];
 } t_packet;
 
+typedef struct 	s_stats
+{
+	uint16_t 	sent;
+	uint16_t 	recv;
+	uint16_t 	duplicate;
+	double 		sum;
+	double 		min;
+	double 		max;
+	double 		avg;
+	double 		stddev;
+} 				t_stats;
+
 typedef struct s_ping
 {
 	t_socket		 socket;
@@ -116,24 +128,37 @@ typedef struct s_ping
 	uint32_t 		 interval;
 	size_t			 count;
 	size_t			 packet_size;
+	t_stats 		 stats;
 	char *			 name;
 	char *			 host;
 	char *			 payload;
 	t_list 			*sent;
-	t_list 			*recieved;
+	t_list 			*recv;
+	t_list 			*delays;
 } t_ping;
 
-int		 init_prgm(t_ping *ping, int ac, char **av);
-uint16_t checksum(void *addr, int count);
+int 		init_prgm(t_ping *ping, int ac, char **av);
+int 		init_socket(t_ping *ping);
 
-int send_packet(t_ping *ping, t_addrinfo *host, t_packet *packet);
-int recv_packet(t_ping *ping);
-int run_ping(t_ping *ping);
+uint16_t 	checksum(void *addr, int count);
+int 		validate_checksum(t_packet *packet, uint32_t packet_size);
 
-void sig_interupt(int signo);
-int waiter(t_ping *ping);
-int validate_ping(t_ping *ping, uint16_t seq);
+int 		send_packet(t_ping *ping, t_addrinfo *host, t_packet *packet);
+int 		recv_packet(t_ping *ping);
 
-void display_start(t_ping *ping, struct addrinfo *host);
-void display_recv(t_ping *ping, t_iphdr *iph, t_packet *packet);
+t_packet 	*generate_packet(t_ping *ping);
+double  	duration(t_time *time);
+int 		calculate_stats(t_ping *ping, t_packet *packet);
+
+void 		sig_interupt(int signo);
+int 		waiter(t_ping *ping);
+int 		validate_ping(t_ping *ping, uint16_t seq);
+
+void 		display_start(t_ping *ping, struct addrinfo *host);
+void 		display_recv(t_ping *ping, t_iphdr *iph, t_packet *packet);
+void 		display_stats(t_ping *ping);
+
+int 		packet_cmp(void *data, void *to_find);
+void 		display_packet(void *data);
+void 		display_lists(t_ping *ping);
 #endif

@@ -6,7 +6,7 @@
 #    By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/07/22 04:47:46 by cempassi          #+#    #+#              #
-#    Updated: 2020/10/10 07:05:02 by cedricmpa        ###   ########.fr        #
+#    Updated: 2020/10/28 00:58:22 by cedricmpa        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,13 +50,15 @@ PATHLI = libft/includes
 INCS += ft_ping.h
 
 #Sources
-SRCM += ping.c
+SRCM += ft_ping.c
 SRCM += init.c
-SRCM += main.c
 SRCM += packet_io.c
 SRCM += utils.c
 SRCM += signals.c
 SRCM += display.c
+SRCM += list.c
+SRCM += socket.c
+SRCM += packet.c
 
 #Debug Files
 DSYM += $(NAME).dSYM

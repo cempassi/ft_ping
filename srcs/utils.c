@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/16 07:26:33 by cempassi          #+#    #+#             */
-/*   Updated: 2020/09/20 13:36:47 by cempassi         ###   ########.fr       */
+/*   Updated: 2020/10/28 01:49:46 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 
 uint16_t checksum(void *addr, int count)
 {
-
 	uint32_t  sum;
 	uint16_t *ptr;
 
@@ -29,17 +28,14 @@ uint16_t checksum(void *addr, int count)
 		sum += *ptr++;
 		count -= 2;
 	}
-
 	if (count > 0)
 		sum += *(uint8_t *)ptr;
-
 	while (sum >> 16)
 		sum = (sum & 0xFFFF) + (sum >> 16);
-
 	return ~sum;
 }
 
-int valid_checksum(t_packet *packet, uint32_t packet_size)
+int validate_checksum(t_packet *packet, uint32_t packet_size)
 {
 	uint32_t expected_sum;
 	uint32_t sum;
@@ -48,7 +44,7 @@ int valid_checksum(t_packet *packet, uint32_t packet_size)
 	packet->header.checksum = 0;
 	sum = checksum(packet, packet_size);
 	packet->header.checksum = expected_sum;
-	return (sum == expected_sum ? 0 : 1);
+	return (sum == expected_sum ? 0 : -1);
 }
 
 int waiter(t_ping *ping)
@@ -83,5 +79,36 @@ int validate_ping(t_ping *ping, uint16_t seq)
 		return (-1);
 	if (ping->options & OPT_C && seq == ping->count)
 		return (-1);
+	return (0);
+}
+
+double duration(t_time *time)
+{
+	double sent;
+	double recv;
+
+	sent = time->sent.tv_sec * 1000000.0 + time->sent.tv_usec;
+	recv = time->recv.tv_sec * 1000000.0 + time->recv.tv_usec;
+	return ((recv - sent) / 1000.0);
+}
+
+int calculate_stats(t_ping *ping, t_packet *packet)
+{
+	t_stats *stats;
+	double delay;
+	t_list *node;
+
+	stats = &ping->stats;
+	delay = duration((t_time *)packet->payload);
+	if (!stats->min || delay < stats->min)
+		stats->min = delay;
+	if (stats->max < delay)
+		stats->max = delay;
+	if ((node = ft_lstnew(&delay, sizeof(double))) == NULL)
+	{
+		ft_dprintf(2, "%s: delay allocation failed\n", ping->name);
+		return (-1);
+	}
+	ft_lstaddback(&ping->delays, node);
 	return (0);
 }

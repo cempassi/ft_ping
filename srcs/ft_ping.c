@@ -1,58 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ping.c                                             :+:      :+:    :+:   */
+/*   ft_ping.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 10:24:11 by cempassi          #+#    #+#             */
-/*   Updated: 2020/10/27 17:17:59 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/10/28 00:59:57 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
-#include "memory.h"
 #include <sys/time.h>
 
-static void generate_payload(t_ping *ping, t_packet *packet)
-{
-	size_t size;
-	size_t to_copy;
-	size_t payload_len;
-	size_t time;
-
-	time = sizeof(t_time);
-	size = ping->packet_size - sizeof(t_icmp_v4_hdr) - time;
-	payload_len = ft_strlen(ping->payload);
-	to_copy = size / payload_len;
-	ft_bzero(packet->payload, time);
-	while (to_copy)
-	{
-		ft_strlcat(packet->payload + time, ping->payload, size);
-		--to_copy;
-	}
-	if (size % payload_len)
-	{
-		ft_strlcat(packet->payload + time, ping->payload, size);
-	}
-	return;
-}
-
-static t_packet *generate_packet(t_ping *ping)
-{
-	t_packet *packet;
-
-	if ((packet = ft_memalloc(ping->packet_size)) == NULL)
-	{
-		ft_dprintf(2, "%s: packet allocation failed\n", ping->name, OPTSTR);
-		return (NULL);
-	}
-	packet->header.type = ICMP_ECHO;
-	packet->header.code = ICMP_ECHO_CODE;
-	packet->header.echo.id = getpid();
-	generate_payload(ping, packet);
-	return (packet);
-}
+unsigned int g_sign = 0;
 
 static struct addrinfo *resolve_host(t_ping *ping)
 {
@@ -104,7 +65,14 @@ static int ping_loop(t_ping *ping, t_addrinfo *host, t_packet *packet)
 	return (0);
 }
 
-int run_ping(t_ping *ping)
+static void clean_ping(t_ping *ping)
+{
+	ft_lstdel(&ping->sent, NULL);
+	ft_lstdel(&ping->recv, NULL);
+	ft_lstdel(&ping->delays, NULL);
+}
+
+static int run_ping(t_ping *ping)
 {
 	struct addrinfo *host;
 	t_packet 		 *packet;
@@ -119,7 +87,26 @@ int run_ping(t_ping *ping)
 	}
 	display_start(ping, host);
 	ping_loop(ping, host, packet);
+	display_stats(ping);
 	ft_memdel((void **)&packet);
 	freeaddrinfo(host);
+	return (0);
+}
+
+int main(int ac, char **av)
+{
+	t_ping ping;
+
+	if (ac == 1)
+	{
+		ft_dprintf(2, "usage: %s [-%s] host\n", av[0], OPTSTR);
+		return (-1);
+	}
+	if (init_prgm(&ping, ac, av))
+	{
+		return (-1);
+	}
+	run_ping(&ping);
+	clean_ping(&ping);
 	return (0);
 }
