@@ -6,12 +6,13 @@
 /*   By: cedricmpassi <cempassi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 18:47:56 by cedricmpa         #+#    #+#             */
-/*   Updated: 2020/10/27 19:14:46 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/10/28 02:00:15 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
 #include <stdio.h>
+#include <math.h>
 
 int packet_cmp(void *data, void *to_find)
 {
@@ -23,15 +24,22 @@ int packet_cmp(void *data, void *to_find)
 	return (packet->header.echo.seq == chr->header.echo.seq ? 1 : 0);
 }
 
-void display_packet(void *data)
+void get_sum(void *acc, void *data)
 {
-	t_packet *packet;
+	double *sum;
+	double *value;
 
-	packet = data;
-	ft_printf("id: %d, seq: %d, type: %d, code: %d, checksum: %d\n",
-			packet->header.echo.id,
-			packet->header.echo.seq,
-			packet->header.type,
-			packet->header.code,
-			packet->header.checksum);
+	sum = acc;
+	value = data;
+	*sum += *value;
+}
+
+void get_variance(void *acc, void *data)
+{
+	t_stats *stats;
+	double *value;
+
+	stats = acc;
+	value = data;
+	stats->sum += pow(*value - stats->avg, 2.0);
 }

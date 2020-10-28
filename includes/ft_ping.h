@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 05:03:31 by cempassi          #+#    #+#             */
-/*   Updated: 2020/10/28 01:47:01 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/10/28 02:00:47 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,8 +157,10 @@ int 		validate_ping(t_ping *ping, uint16_t seq);
 void 		display_start(t_ping *ping, struct addrinfo *host);
 void 		display_recv(t_ping *ping, t_iphdr *iph, t_packet *packet);
 void 		display_stats(t_ping *ping);
+void 		display_lists(t_ping *ping);
 
 int 		packet_cmp(void *data, void *to_find);
-void 		display_packet(void *data);
-void 		display_lists(t_ping *ping);
+void 		get_variance(void *acc, void *data);
+void 		get_sum(void *acc, void *data);
+
 #endif

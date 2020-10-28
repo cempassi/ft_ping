@@ -6,14 +6,14 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 13:19:10 by cempassi          #+#    #+#             */
-/*   Updated: 2020/10/28 01:43:14 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/10/28 02:00:56 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
 #include <arpa/inet.h>
-#include <math.h>
 #include <stdio.h>
+#include <math.h>
 
 void display_recv(t_ping *ping, t_iphdr *iph, t_packet *packet)
 {
@@ -39,25 +39,6 @@ void display_start(t_ping *ping, struct addrinfo *host)
 	ft_printf("PING %s (%s): %d bytes of data\n", ping->host, host_ip, data);
 }
 
-void get_sum(void *acc, void *data)
-{
-	double *sum;
-	double *value;
-
-	sum = acc;
-	value = data;
-	*sum += *value;
-}
-
-void get_variance(void *acc, void *data)
-{
-	t_stats *stats;
-	double *value;
-
-	stats = acc;
-	value = data;
-	stats->sum += pow(*value - stats->avg, 2.0);
-}
 
 void display_stats(t_ping *ping)
 {
