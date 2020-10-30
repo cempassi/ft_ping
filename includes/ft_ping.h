@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 05:03:31 by cempassi          #+#    #+#             */
-/*   Updated: 2020/10/28 02:00:47 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/10/28 19:24:35 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@
 #include <netinet/ip.h>
 #include <netinet/ip_icmp.h>
 #include <stdint.h>
-#include <sys/_types/_timeval.h>
+#include <sys/time.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 
-#define OPTSTR "c:vho"
+#define OPTSTR "c:i:m:s:qvho"
 
 #define PING_INTERUPT 0x0001
 
@@ -29,26 +29,23 @@
 #define OPT_V 0x0002
 #define OPT_C 0x0004
 #define OPT_O 0x0008
-#define OPT_SO_DEBUG 0x0010
+#define OPT_I 0x0010
+#define OPT_M 0x0020
+#define OPT_S 0x0040
+#define OPT_Q 0x0080
 
 #define OPT_C_ERROR "-c [NUMBER]"
-
-#define ICMP_V4_REPLY 0x00
-#define ICMP_V4_DST_UNREACHABLE 0x03
-#define ICMP_V4_SRC_QUENCH 0x04
-#define ICMP_V4_REDIRECT 0x05
-#define ICMP_V4_ECHO 0x08
-#define ICMP_V4_ROUTER_ADV 0x09
-#define ICMP_V4_ROUTER_SOL 0x0a
-#define ICMP_V4_TIMEOUT 0x0b
-#define ICMP_V4_MALFORMED 0x0c
+#define OPT_I_ERROR "-i [NUMBER]"
+#define OPT_M_ERROR "-m [NUMBER]"
+#define OPT_S_ERROR "-s [NUMBER]"
 
 #define ICMP_ECHO_CODE 0
 #define ICMP_HEADER_LEN 8
 #define IP_HEADER_LEN 20
+#define TIME_DATA sizeof(t_time)
 
 #define DEFAULT_PAYLOAD "42"
-#define DEFAULT_PACKET_SIZE 64
+#define DEFAULT_PAYLOAD_SIZE 54
 #define DEFAULT_TTL 64
 #define DEFAULT_INTERVAL 1
 #define ICMP_TOS 0
@@ -124,10 +121,11 @@ typedef struct 	s_stats
 typedef struct s_ping
 {
 	t_socket		 socket;
+	int16_t 		 exit;
 	uint32_t		 options;
 	uint32_t 		 interval;
 	size_t			 count;
-	size_t			 packet_size;
+	size_t			 payload_size;
 	t_stats 		 stats;
 	char *			 name;
 	char *			 host;
@@ -140,19 +138,22 @@ typedef struct s_ping
 int 		init_prgm(t_ping *ping, int ac, char **av);
 int 		init_socket(t_ping *ping);
 
-uint16_t 	checksum(void *addr, int count);
-int 		validate_checksum(t_packet *packet, uint32_t packet_size);
-
 int 		send_packet(t_ping *ping, t_addrinfo *host, t_packet *packet);
 int 		recv_packet(t_ping *ping);
 
 t_packet 	*generate_packet(t_ping *ping);
+
 double  	duration(t_time *time);
 int 		calculate_stats(t_ping *ping, t_packet *packet);
+int 		get_time(t_ping *ping, struct timeval *current);
+int 		delay(t_ping *ping);
+uint16_t 	checksum(void *addr, int count);
 
 void 		sig_interupt(int signo);
-int 		waiter(t_ping *ping);
-int 		validate_ping(t_ping *ping, uint16_t seq);
+
+int 		validate_checksum(t_packet *packet, uint32_t packet_size);
+int 		validate_recv(t_ping *ping, t_packet *packet, int recieved);
+int 		validate_send(t_ping *ping, int16_t sent);
 
 void 		display_start(t_ping *ping, struct addrinfo *host);
 void 		display_recv(t_ping *ping, t_iphdr *iph, t_packet *packet);

@@ -6,11 +6,12 @@
 /*   By: cedricmpassi <cempassi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/28 00:53:27 by cedricmpa         #+#    #+#             */
-/*   Updated: 2020/10/28 00:54:13 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/10/28 19:26:57 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
+#include <sysexits.h>
 
 static void generate_payload(t_ping *ping, t_packet *packet)
 {
@@ -19,29 +20,35 @@ static void generate_payload(t_ping *ping, t_packet *packet)
 	size_t payload_len;
 	size_t time;
 
-	time = sizeof(t_time);
-	size = ping->packet_size - sizeof(t_icmp_v4_hdr) - time;
+	time = 0;
+	size = ping->payload_size;
+	if (size >= TIME_DATA)
+	{
+		time = TIME_DATA;
+		ft_bzero(packet->payload, time);
+		size -= time;
+	}
 	payload_len = ft_strlen(ping->payload);
 	to_copy = size / payload_len;
-	ft_bzero(packet->payload, time);
 	while (to_copy)
 	{
 		ft_strlcat(packet->payload + time, ping->payload, size);
 		--to_copy;
 	}
 	if (size % payload_len)
-	{
 		ft_strlcat(packet->payload + time, ping->payload, size);
-	}
 	return;
 }
 
 t_packet *generate_packet(t_ping *ping)
 {
 	t_packet *packet;
+	size_t packet_size;
 
-	if ((packet = ft_memalloc(ping->packet_size)) == NULL)
+	packet_size = ping->payload_size + ICMP_HEADER_LEN;
+	if ((packet = ft_memalloc(packet_size)) == NULL)
 	{
+		ping->exit = EX_USAGE;
 		ft_dprintf(2, "%s: packet allocation failed\n", ping->name);
 		return (NULL);
 	}

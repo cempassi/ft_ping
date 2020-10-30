@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/16 07:26:33 by cempassi          #+#    #+#             */
-/*   Updated: 2020/10/28 01:49:46 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/10/30 17:59:21 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <stdint.h>
 #include <sys/select.h>
 #include <sys/time.h>
+#include <sysexits.h>
 
 uint16_t checksum(void *addr, int count)
 {
@@ -35,25 +36,30 @@ uint16_t checksum(void *addr, int count)
 	return ~sum;
 }
 
-int validate_checksum(t_packet *packet, uint32_t packet_size)
+int get_time(t_ping *ping, struct timeval *current)
 {
-	uint32_t expected_sum;
-	uint32_t sum;
+	size_t packet_size;
 
-	expected_sum = packet->header.checksum;
-	packet->header.checksum = 0;
-	sum = checksum(packet, packet_size);
-	packet->header.checksum = expected_sum;
-	return (sum == expected_sum ? 0 : -1);
+	packet_size = ping->payload_size + ICMP_HEADER_LEN;
+	if (packet_size < TIME_DATA + ICMP_HEADER_LEN)
+		return (0);
+	if (gettimeofday(current, NULL))
+	{
+		ping->exit = EX_OSERR;
+		ft_dprintf(STDERR_FILENO, "%s: time retrieval failed\n", ping->name);
+		return (-1);
+	}
+	return (0);
 }
 
-int waiter(t_ping *ping)
+int delay(t_ping *ping)
 {
 	struct timeval current;
 	struct timeval to_wait;
 
 	if (gettimeofday(&current, NULL))
 	{
+		ping->exit = EX_OSERR;
 		ft_dprintf(STDERR_FILENO, "%s: time retrieval failed\n", ping->name);
 		return (-1);
 	}
@@ -63,22 +69,11 @@ int waiter(t_ping *ping)
 	{
 		if (gettimeofday(&current, NULL))
 		{
-			ft_dprintf(STDERR_FILENO, "%s: time retrieval failed\n",
-					   ping->name);
+			ping->exit = EX_OSERR;
+			ft_dprintf(STDERR_FILENO, "%s: time retrieval failed\n", ping->name);
 			return (-1);
 		}
 	}
-	return (0);
-}
-
-int validate_ping(t_ping *ping, uint16_t seq)
-{
-	if (g_sign & PING_INTERUPT)
-		return (-1);
-	if (ping->options & OPT_O && seq == 1)
-		return (-1);
-	if (ping->options & OPT_C && seq == ping->count)
-		return (-1);
 	return (0);
 }
 
@@ -98,6 +93,8 @@ int calculate_stats(t_ping *ping, t_packet *packet)
 	double delay;
 	t_list *node;
 
+	if (ping->payload_size < TIME_DATA)
+		return (0);
 	stats = &ping->stats;
 	delay = duration((t_time *)packet->payload);
 	if (!stats->min || delay < stats->min)
@@ -106,6 +103,7 @@ int calculate_stats(t_ping *ping, t_packet *packet)
 		stats->max = delay;
 	if ((node = ft_lstnew(&delay, sizeof(double))) == NULL)
 	{
+		ping->exit = EX_OSERR;
 		ft_dprintf(2, "%s: delay allocation failed\n", ping->name);
 		return (-1);
 	}
