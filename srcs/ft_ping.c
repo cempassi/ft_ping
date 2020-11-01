@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 10:24:11 by cempassi          #+#    #+#             */
-/*   Updated: 2020/10/28 19:39:32 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/01 16:26:11 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,11 +104,20 @@ int main(int ac, char **av)
 
 	if (ac == 1)
 	{
-		ft_dprintf(2, "usage: %s [-%s] host\n", av[0], OPTSTR);
+		display_help(av[0]);
 		return (EX_USAGE);
 	}
 	if (init_prgm(&ping, ac, av))
+	{
+		if (ping.exit == EX_USAGE)
+			display_help(av[0]);
 		return (ping.exit);
+	}
+	if (ping.options & OPT_H)
+	{
+		display_help(av[0]);
+		return(0);
+	}
 	run_ping(&ping);
 	ft_lstdel(&ping.sent, NULL);
 	ft_lstdel(&ping.recv, NULL);

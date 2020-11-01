@@ -6,11 +6,12 @@
 /*   By: cedricmpassi <cempassi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 22:20:09 by cedricmpa         #+#    #+#             */
-/*   Updated: 2020/10/28 17:46:55 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/01 17:14:15 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
+#include <stdio.h>
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <sysexits.h>
@@ -20,15 +21,14 @@ static int set_ip_opt(t_ping *ping)
 	t_socket *sock;
 
 	sock = &ping->socket;
-	if (setsockopt(sock->fd, IPPROTO_IP, IP_TTL, &(sock->ttl),
-				   sizeof(uint8_t *)) < 0)
+	if (setsockopt(sock->fd, IPPROTO_IP, IP_TTL, &sock->ttl, sizeof(sock->ttl)))
 	{
 		ping->exit = EX_OSERR;
+		perror("");
 		ft_dprintf(STDERR_FILENO, "%s: ttl configuration failed\n", ping->name);
 		return (-1);
 	}
-	if (setsockopt(sock->fd, IPPROTO_IP, IP_TOS, &(sock->tos),
-				   sizeof(uint8_t *)) < 0)
+	if (setsockopt(sock->fd, IPPROTO_IP, IP_TOS, &sock->tos, sizeof(sock->tos)))
 	{
 		ping->exit = EX_OSERR;
 		ft_dprintf(STDERR_FILENO, "%s: Tos configuration failed\n", ping->name);

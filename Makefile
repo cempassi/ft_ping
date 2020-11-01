@@ -6,7 +6,7 @@
 #    By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/07/22 04:47:46 by cempassi          #+#    #+#              #
-#    Updated: 2020/10/28 16:37:49 by cedricmpa        ###   ########.fr        #
+#    Updated: 2020/10/30 18:20:20 by cedricmpa        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,6 +60,7 @@ SRCM += list.c
 SRCM += socket.c
 SRCM += packet.c
 SRCM += validate.c
+SRCM += time.c
 
 #Debug Files
 DSYM += $(NAME).dSYM

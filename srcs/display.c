@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 13:19:10 by cempassi          #+#    #+#             */
-/*   Updated: 2020/10/30 18:02:19 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/01 17:56:55 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <arpa/inet.h>
 #include <stdio.h>
 
-void display_recv(t_ping *ping, t_iphdr *iph, t_packet *packet)
+void 			display_recv(t_ping *ping, t_iphdr *iph, t_packet *packet)
 {
 	char src[INET_ADDRSTRLEN];
 	t_time *time;
@@ -30,7 +30,21 @@ void display_recv(t_ping *ping, t_iphdr *iph, t_packet *packet)
 	ft_putchar('\n');
 }
 
-void display_start(t_ping *ping, struct addrinfo *host)
+void 			display_help(char *name)
+{
+	ft_dprintf(STDERR_FILENO, "usage: %s [-hoqv] [-c count] ", name);
+	ft_dprintf(STDERR_FILENO, "[-i wait] [-m ttl] [-s packetsize]\n");
+	ft_dprintf(STDERR_FILENO, "\t%s\n", DESC_C);
+	ft_dprintf(STDERR_FILENO, "\t%s\n", DESC_I);
+	ft_dprintf(STDERR_FILENO, "\t%s\n", DESC_M);
+	ft_dprintf(STDERR_FILENO, "\t%s\n", DESC_S);
+	ft_dprintf(STDERR_FILENO, "\t%s\n", DESC_H);
+	ft_dprintf(STDERR_FILENO, "\t%s\n", DESC_O);
+	ft_dprintf(STDERR_FILENO, "\t%s\n", DESC_Q);
+	ft_dprintf(STDERR_FILENO, "\t%s\n", DESC_V);
+}
+
+void 			display_start(t_ping *ping, struct addrinfo *host)
 {
 	char				host_ip[INET_ADDRSTRLEN];
 	int					data;
@@ -42,22 +56,7 @@ void display_start(t_ping *ping, struct addrinfo *host)
 	ft_printf("PING %s (%s): %d bytes of data\n", ping->host, host_ip, data);
 }
 
-static double square_root(double number)
-{
-	double tmp;
-	double result;
-
-	result = number / 2;
-	tmp = 0;
-	while(result != tmp)
-	{
-		tmp = result;
-		result = (number / tmp + tmp) / 2;
-	}
-	return (result);
-}
-
-static void display_rtt(t_ping *ping)
+static void 	display_rtt(t_ping *ping)
 {
 	t_stats *stats;
 	double variance;
@@ -73,7 +72,7 @@ static void display_rtt(t_ping *ping)
 			stats->min, stats->avg, stats->max, square_root(variance));
 }
 
-void display_stats(t_ping *ping)
+void 			display_stats(t_ping *ping)
 {
 	t_stats *stats;
 	size_t loss;
@@ -86,6 +85,6 @@ void display_stats(t_ping *ping)
 	if (ping->stats.duplicate)
 		ft_printf("+%d duplicates, ", stats->duplicate);
 	printf("%.1lf%% packet loss\n", (double)100 * loss / stats->sent);
-	if (ping->payload_size >= TIME_DATA)
+	if (ping->payload_size >= TIME_DATA && ping->stats.recv > 0)
 		display_rtt(ping);
 }

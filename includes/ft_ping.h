@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 05:03:31 by cempassi          #+#    #+#             */
-/*   Updated: 2020/10/28 19:24:35 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/01 18:28:48 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,14 @@
 #define ICMP_TOS 0
 #define MTU 1500
 
+#define DESC_C "-c count: Stop after sending (and recieving) count packets."
+#define DESC_I "-i wait: Wait ait seconds between sending each packet."
+#define DESC_M "-m ttl: Set the IP Time To Live for outgoing packets."
+#define DESC_S "-s packetsize: Specify the number of daya bytes to be sent."
+#define DESC_H "-h: Display help."
+#define DESC_O "-o: Exit successfully after recieving one reply packet."
+#define DESC_Q "-q: Quiet output. Nothing is displayed except the summury lines."
+#define DESC_V "-v: Verbose output. ICMP Packets other than ECHO_RESPONSE that are recieved are listed."
 
 extern unsigned int g_sign;
 
@@ -60,8 +68,8 @@ typedef struct msghdr t_msghdr;
 typedef struct s_socket
 {
 	int		fd;
-	uint8_t ttl;
-	uint8_t tos;
+	int 	ttl;
+	int 	tos;
 } t_socket;
 
 typedef struct s_time
@@ -99,6 +107,17 @@ typedef struct s_icmp_v4_hdr
 	uint16_t checksum;
 	t_icmp_v4_echo echo;
 } t_icmp_v4_hdr;
+
+typedef struct s_timexceed
+{
+	uint8_t 		type;
+	uint8_t 		code;
+	uint16_t 		checksum;
+	uint32_t 		unused;
+	t_iphdr 		iphdr;
+	t_icmp_v4_hdr 	icmp_hdr;
+
+} t_timexceed;
 
 typedef struct s_packet
 {
@@ -147,15 +166,18 @@ double  	duration(t_time *time);
 int 		calculate_stats(t_ping *ping, t_packet *packet);
 int 		get_time(t_ping *ping, struct timeval *current);
 int 		delay(t_ping *ping);
+
 uint16_t 	checksum(void *addr, int count);
+double 		square_root(double number);
 
 void 		sig_interupt(int signo);
 
 int 		validate_checksum(t_packet *packet, uint32_t packet_size);
-int 		validate_recv(t_ping *ping, t_packet *packet, int recieved);
+int 		validate_recv(t_ping *ping, char *buffer, int recieved);
 int 		validate_send(t_ping *ping, int16_t sent);
 
 void 		display_start(t_ping *ping, struct addrinfo *host);
+void 		display_help(char *name);
 void 		display_recv(t_ping *ping, t_iphdr *iph, t_packet *packet);
 void 		display_stats(t_ping *ping);
 void 		display_lists(t_ping *ping);

@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 02:05:55 by cempassi          #+#    #+#             */
-/*   Updated: 2020/10/28 19:27:15 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/01 16:34:52 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int get_argument(t_ping *ping, char *optarg, uint8_t opt, char *errmsg)
 	if (!ft_strcheck(optarg, ft_isdigit))
 	{
 		ping->exit = EX_USAGE;
-		ft_dprintf(2, "%s: illegal option arg -- %s\n", ping->name, errmsg);
+		ft_dprintf(2, "%s: Argument is not a number -- %s\n", ping->name, errmsg);
 		return (-1);
 	}
 	ping->options |= opt;
@@ -81,10 +81,10 @@ int init_prgm(t_ping *ping, int ac, char **av)
 	if ((error = ft_getopt(ac, av, &option, &optarg)) != 0)
 	{
 		ping->exit = EX_USAGE;
-		if (option.error)
-			ft_dprintf(2, "%s: illegal option -- %s\n", av[0], option.error);
+		if (ft_strchr(OPTSTR, error))
+			ft_dprintf(2, "%s: Requires an argument -- -%c\n", av[0], error);
 		else
-			ft_dprintf(2, "%s: illegal option -- %c\n", av[0], error);
+			ft_dprintf(2, "%s: illegal option -- -%c\n", av[0], error);
 		return (-1);
 	}
 	ping->host = av[ac - 1];
