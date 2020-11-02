@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 10:24:11 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/02 00:45:55 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 01:33:15 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,18 +55,16 @@ static int validate_ping(t_ping *ping, uint16_t seq)
 
 static int ping_loop(t_ping *ping, t_addrinfo *host, t_packet *packet)
 {
-	uint16_t seq;
 	t_time	 *time;
 	size_t packet_size;
 
-	seq = 0;
 	packet_size = ping->payload_size + ICMP_HEADER_LEN;
 	time = (t_time *)packet->payload;
-	while (validate_ping(ping, seq) == 0)
+	while (validate_ping(ping, ping->seq) == 0)
 	{
 		ft_bzero(time, sizeof(t_time));
 		packet->header.checksum = 0;
-		packet->header.echo.seq = seq;
+		packet->header.echo.seq = ping->seq;
 		if (get_time(ping, &time->sent))
 			return (-1);
 		packet->header.checksum = checksum(packet, packet_size);
@@ -75,7 +73,7 @@ static int ping_loop(t_ping *ping, t_addrinfo *host, t_packet *packet)
 			if (ping->exit > EX__BASE)
 				return (-1);
 		}
-		++seq;
+		++ping->seq;
 	}
 	return (0);
 }

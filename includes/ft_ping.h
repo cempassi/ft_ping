@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 05:03:31 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/02 01:23:00 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 01:32:53 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,7 @@ typedef struct s_ping
 {
 	t_socket		 socket;
 	int16_t 		 exit;
+	uint16_t 		 seq;
 	uint32_t		 options;
 	uint32_t 		 interval;
 	size_t			 count;

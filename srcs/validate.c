@@ -6,7 +6,7 @@
 /*   By: cedricmpassi <cempassi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/28 16:33:11 by cedricmpa         #+#    #+#             */
-/*   Updated: 2020/11/02 01:09:31 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 02:33:11 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,7 @@ static void 	time_exceeded(t_iphdr *iphdr, t_timexceed *packet, int recieved)
 	char src[INET_ADDRSTRLEN];
 	char pack_src[INET_ADDRSTRLEN];
 	char pack_dst[INET_ADDRSTRLEN];
-	char *msg;
 
-	msg = "Request timeout for icmp_seq ";
-	ft_dprintf(2, "%s %d\n", msg, packet->icmp_hdr.echo.seq);
 	inet_ntop(AF_INET, &iphdr->saddr, src, INET_ADDRSTRLEN);
 	inet_ntop(AF_INET, &packet->iphdr.saddr, pack_src, INET_ADDRSTRLEN);
 	inet_ntop(AF_INET, &packet->iphdr.daddr, pack_dst, INET_ADDRSTRLEN);
@@ -69,18 +66,18 @@ int validate_recv(t_ping *ping, char *buffer, int recieved)
 {
 	t_packet *packet;
 
+	if (g_sign & PING_INTERUPT || recieved <= 0)
+		return (-1);
 	packet = (t_packet *)(buffer + 20);
 	if (packet->header.type != ICMP_ECHOREPLY)
 	{
 		if (packet->header.type == ICMP_UNREACH)
 			ft_dprintf(2, "%s\n", dst_unreachable(packet->header.code));
 		else if (packet->header.type == ICMP_TIMXCEED)
+		{
 			time_exceeded((t_iphdr *)buffer, (t_timexceed *)packet, recieved);
-		return (-1);
-	}
-	if (validate_checksum(packet, ping->payload_size + ICMP_HEADER_LEN))
-	{
-		ft_dprintf(STDERR_FILENO, "Packet validation failed\n");
+			recv_packet(ping);
+		}
 		return (-1);
 	}
 	return (0);

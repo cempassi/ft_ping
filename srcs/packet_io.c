@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 10:20:21 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/02 01:16:45 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 02:26:48 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,18 @@ static int await_packet(t_ping *ping, struct msghdr *message)
 {
 	int recieved;
 
-	while ((g_sign & PING_ALARM) == 0 && recieved <= 0)
-		recieved = recvmsg(ping->socket.fd, message, 0);
-	return (0);
+	alarm(1);
+	recieved = -1;
+	while ((g_sign & (PING_ALARM + PING_INTERUPT)) == 0 && recieved <= 0)
+		recieved = recvmsg(ping->socket.fd, message, MSG_DONTWAIT);
+	if (g_sign & PING_ALARM)
+	{
+		ft_dprintf(2, "Request timeout for icmp_seq %d\n", ping->seq);
+		g_sign &= ~(PING_ALARM);
+		return (-1);
+	}
+	alarm(0);
+	return (recieved);
 }
 
 int recv_packet(t_ping *ping)
@@ -91,6 +100,7 @@ int recv_packet(t_ping *ping)
 
 	setup_message(&message, vector, buffer);
 	packet = (t_packet *)(buffer + 20);
+	recieved = await_packet(ping, &message);
 	if (validate_recv(ping, buffer, recieved) == 0)
 	{
 		if (get_time(ping, &((t_time *)packet->payload)->recv))
@@ -99,5 +109,5 @@ int recv_packet(t_ping *ping)
 			display_recv(ping, (t_iphdr *)buffer, packet);
 		return(process_packet(ping, packet));
 	}
-	return (0);
+	return (recieved < 0 ? -1 : 0);
 }

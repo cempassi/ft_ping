@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/16 07:26:33 by cempassi          #+#    #+#             */
-/*   Updated: 2020/10/30 18:20:26 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 01:48:49 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,12 @@ double square_root(double number)
 		result = (number / tmp + tmp) / 2;
 	}
 	return (result);
+}
+
+void sig_handler(int signo)
+{
+	if (signo == SIGINT)
+		g_sign |= PING_INTERUPT;
+	else if (signo == SIGALRM)
+		g_sign |= PING_ALARM;
 }
