@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 05:03:31 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/02 01:32:53 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 04:09:15 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@
 #define DEFAULT_INTERVAL 1
 #define ICMP_TOS 0
 #define MTU 1500
+#define HOST_LEN 256
 
 #define DESC_C "-c count: Stop after sending (and recieving) count packets."
 #define DESC_I "-i wait: Wait ait seconds between sending each packet."
@@ -172,6 +173,7 @@ int 		delay(t_ping *ping);
 uint16_t 	checksum(void *addr, int count);
 double 		square_root(double number);
 void 		sig_handler(int signo);
+char 		*reverse_dns(char *str);
 
 int 		validate_checksum(t_packet *packet, uint32_t packet_size);
 int 		validate_recv(t_ping *ping, char *buffer, int recieved);

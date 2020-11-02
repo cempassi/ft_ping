@@ -6,7 +6,7 @@
 /*   By: cedricmpassi <cempassi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/28 16:33:11 by cedricmpa         #+#    #+#             */
-/*   Updated: 2020/11/02 03:02:12 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 04:10:31 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,21 @@ static void 	time_exceeded(t_iphdr *iphdr, t_timexceed *packet, int recieved)
 	char src[INET_ADDRSTRLEN];
 	char pack_src[INET_ADDRSTRLEN];
 	char pack_dst[INET_ADDRSTRLEN];
+	char *host;
 
 	inet_ntop(AF_INET, &iphdr->saddr, src, INET_ADDRSTRLEN);
 	inet_ntop(AF_INET, &packet->iphdr.saddr, pack_src, INET_ADDRSTRLEN);
 	inet_ntop(AF_INET, &packet->iphdr.daddr, pack_dst, INET_ADDRSTRLEN);
-	ft_dprintf(2, "%d bytes from %s: Time to live exceeded\n", recieved, src);
+	if (!(host = reverse_dns(src)))
+		return;
+	ft_dprintf(2, "%d bytes from %s %s: Time to live exceeded\n", recieved
+			, host, src);
+	ft_strdel(&host);
 	ft_dprintf(2, "Vr HL TOS  Len   ID Flg  off TTL Pro  cks %*s %*s %*s\n"
-			, ft_strlen(pack_src) / 2, "Src"
-			, ft_strlen(pack_src)/ 2, ""
+			, ft_strlen(pack_src) / 2, "Src", ft_strlen(pack_src)/ 2, ""
 			, ft_strlen(pack_dst) / 2, "Dst");
-	ft_dprintf(2, "%2d %2hhd %3d %4x %4x %3d %04d %3d %3d %4x %*s %*s\n\n",
-			packet->iphdr.version, packet->iphdr.ihl, packet->iphdr.tos
+	ft_dprintf(2, "%2d %2hhd %3d %4x %4x %3d %04d %3d %3d %4x %*s %*s\n\n"
+			, packet->iphdr.version, packet->iphdr.ihl, packet->iphdr.tos
 			, packet->iphdr.len, packet->iphdr.id, packet->iphdr.flags
 			, packet->iphdr.frag_offset, packet->iphdr.proto
 			, packet->iphdr.ttl, packet->iphdr.csum

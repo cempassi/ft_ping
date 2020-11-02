@@ -6,12 +6,13 @@
 /*   By: cedricmpassi <cempassi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 18:47:56 by cedricmpa         #+#    #+#             */
-/*   Updated: 2020/10/28 17:49:07 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 04:00:05 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
 #include <stdio.h>
+#include <arpa/inet.h>
 
 int packet_cmp(void *data, void *to_find)
 {

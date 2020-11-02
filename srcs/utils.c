@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/16 07:26:33 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/02 03:04:37 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 04:09:31 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,21 @@ void 		sig_handler(int signo)
 		g_sign |= PING_INTERUPT;
 	else if (signo == SIGALRM)
 		g_sign |= PING_ALARM;
+}
+
+char 		*reverse_dns(char *str)
+{
+	struct sockaddr_in 	address;
+	char 				buffer[HOST_LEN];
+
+	ft_bzero(buffer, HOST_LEN);
+	ft_bzero(&address, sizeof(struct sockaddr_in));
+	address.sin_family = AF_INET;
+	inet_pton(AF_INET, str, &address.sin_addr);
+	if (getnameinfo((struct sockaddr *)&address,sizeof(struct sockaddr)
+				, buffer, HOST_LEN, NULL, 0, 0))
+	{
+		return (NULL);
+	}
+	return (ft_strdup(buffer));
 }
