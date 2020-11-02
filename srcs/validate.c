@@ -6,7 +6,7 @@
 /*   By: cedricmpassi <cempassi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/28 16:33:11 by cedricmpa         #+#    #+#             */
-/*   Updated: 2020/11/02 02:33:11 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 03:02:12 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static void 	time_exceeded(t_iphdr *iphdr, t_timexceed *packet, int recieved)
 	return;
 }
 
-int validate_recv(t_ping *ping, char *buffer, int recieved)
+int 			validate_recv(t_ping *ping, char *buffer, int recieved)
 {
 	t_packet *packet;
 
@@ -83,7 +83,7 @@ int validate_recv(t_ping *ping, char *buffer, int recieved)
 	return (0);
 }
 
-int validate_send(t_ping *ping, int16_t sent)
+int 			validate_send(t_ping *ping, int16_t sent)
 {
 	if (sent < 0)
 	{
@@ -103,7 +103,7 @@ int validate_send(t_ping *ping, int16_t sent)
 	return (sent);
 }
 
-int validate_checksum(t_packet *packet, uint32_t packet_size)
+int 			validate_checksum(t_packet *packet, uint32_t packet_size)
 {
 	uint32_t expected_sum;
 	uint32_t sum;

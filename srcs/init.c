@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 02:05:55 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/02 01:23:23 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 03:03:47 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,19 @@
 #include <sysexits.h>
 #include <stdio.h>
 
-static int get_argument(t_ping *ping, char *optarg, uint8_t opt, char *errmsg)
+static int 		get_argument(t_ping *ping, char *optarg, uint8_t opt, char *msg)
 {
 	if (!ft_strcheck(optarg, ft_isdigit))
 	{
 		ping->exit = EX_USAGE;
-		ft_dprintf(2, "%s: Argument is not a number -- %s\n", ping->name, errmsg);
+		ft_dprintf(2, "%s: Argument is not a number -- %s\n", ping->name, msg);
 		return (-1);
 	}
 	ping->options |= opt;
 	return (ft_atoi(optarg));
 }
 
-static int parse_opt(t_ping *ping, t_opt *option, int ac, char **av)
+static int 		parse_opt(t_ping *ping, t_opt *option, int ac, char **av)
 {
 	char  opt;
 	char *optarg;
@@ -55,7 +55,7 @@ static int parse_opt(t_ping *ping, t_opt *option, int ac, char **av)
 	return (0);
 }
 
-static void init_ping(t_ping *ping, char **av)
+static void 	init_ping(t_ping *ping, char **av)
 {
 	ft_bzero(ping, sizeof(struct s_ping));
 	ping->name = av[0];
@@ -64,9 +64,11 @@ static void init_ping(t_ping *ping, char **av)
 	ping->interval = DEFAULT_INTERVAL;
 	ping->socket.ttl = DEFAULT_TTL;
 	ping->socket.tos = ICMP_TOS;
+	signal(SIGINT, sig_handler);
+	signal(SIGALRM, sig_handler);
 }
 
-int init_prgm(t_ping *ping, int ac, char **av)
+int 			init_prgm(t_ping *ping, int ac, char **av)
 {
 	t_opt option;
 	char *optarg;
@@ -75,8 +77,6 @@ int init_prgm(t_ping *ping, int ac, char **av)
 	setbuf(stdout, NULL);
 	ft_bzero(&option, sizeof(t_opt));
 	init_ping(ping, av);
-	signal(SIGINT, sig_handler);
-	signal(SIGALRM, sig_handler);
 	option.optstr = OPTSTR;
 	optarg = NULL;
 	if ((error = ft_getopt(ac, av, &option, &optarg)) != 0)

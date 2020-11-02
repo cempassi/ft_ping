@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/16 07:26:33 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/02 01:48:49 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 03:04:37 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <sys/time.h>
 #include <sysexits.h>
 
-uint16_t checksum(void *addr, int count)
+uint16_t 	checksum(void *addr, int count)
 {
 	uint32_t  sum;
 	uint16_t *ptr;
@@ -36,7 +36,7 @@ uint16_t checksum(void *addr, int count)
 	return ~sum;
 }
 
-double square_root(double number)
+double 		square_root(double number)
 {
 	double tmp;
 	double result;
@@ -51,7 +51,7 @@ double square_root(double number)
 	return (result);
 }
 
-void sig_handler(int signo)
+void 		sig_handler(int signo)
 {
 	if (signo == SIGINT)
 		g_sign |= PING_INTERUPT;

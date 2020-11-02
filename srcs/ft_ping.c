@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 10:24:11 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/02 01:33:15 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 03:01:13 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,10 +96,13 @@ static int run_ping(t_ping *ping)
 	display_stats(ping);
 	ft_memdel((void **)&packet);
 	freeaddrinfo(host);
+	ft_lstdel(&ping->sent, NULL);
+	ft_lstdel(&ping->recv, NULL);
+	ft_lstdel(&ping->delays, NULL);
 	return (0);
 }
 
-int main(int ac, char **av)
+int 	main(int ac, char **av)
 {
 	t_ping ping;
 
@@ -120,8 +123,5 @@ int main(int ac, char **av)
 		return(0);
 	}
 	run_ping(&ping);
-	ft_lstdel(&ping.sent, NULL);
-	ft_lstdel(&ping.recv, NULL);
-	ft_lstdel(&ping.delays, NULL);
 	return (ping.exit);
 }

@@ -6,7 +6,7 @@
 /*   By: cedricmpassi <cempassi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/30 18:18:55 by cedricmpa         #+#    #+#             */
-/*   Updated: 2020/10/30 18:21:55 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 03:02:31 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <sys/time.h>
 #include <sysexits.h>
 
-double duration(t_time *time)
+double 	duration(t_time *time)
 {
 	double sent;
 	double recv;
@@ -24,7 +24,7 @@ double duration(t_time *time)
 	return ((recv - sent) / 1000.0);
 }
 
-int calculate_stats(t_ping *ping, t_packet *packet)
+int 	calculate_stats(t_ping *ping, t_packet *packet)
 {
 	t_stats *stats;
 	double delay;
@@ -48,7 +48,7 @@ int calculate_stats(t_ping *ping, t_packet *packet)
 	return (0);
 }
 
-int get_time(t_ping *ping, struct timeval *current)
+int 	get_time(t_ping *ping, struct timeval *current)
 {
 	size_t packet_size;
 
@@ -64,7 +64,7 @@ int get_time(t_ping *ping, struct timeval *current)
 	return (0);
 }
 
-int delay(t_ping *ping)
+int 	delay(t_ping *ping)
 {
 	struct timeval current;
 	struct timeval to_wait;
