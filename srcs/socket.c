@@ -6,7 +6,7 @@
 /*   By: cedricmpassi <cempassi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 22:20:09 by cedricmpa         #+#    #+#             */
-/*   Updated: 2020/11/01 17:14:15 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 00:53:45 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,19 +40,10 @@ static int set_ip_opt(t_ping *ping)
 static int set_socket_opt(t_ping *ping)
 {
 	t_socket 	   	*sock;
-	struct timeval 	time;
 	int 			broadcast;
 
 	sock = &ping->socket;
-	time.tv_sec = 10;
-	time.tv_usec = 0;
 	broadcast = 1;
-	if (setsockopt(sock->fd, SOL_SOCKET, SO_RCVTIMEO, &time, sizeof(time)))
-	{
-		ping->exit = EX_OSERR;
-		ft_dprintf(2, "%s: SO_RCVTIMEO configuration failed\n", ping->name);
-		return (-1);
-	}
 	if (setsockopt(sock->fd, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(int)))
 	{
 		ping->exit = EX_OSERR;

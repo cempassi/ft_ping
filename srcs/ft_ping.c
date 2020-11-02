@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 10:24:11 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/01 16:26:11 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 00:45:55 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,10 @@ static int ping_loop(t_ping *ping, t_addrinfo *host, t_packet *packet)
 			return (-1);
 		packet->header.checksum = checksum(packet, packet_size);
 		if (send_packet(ping, host, packet) || recv_packet(ping) || delay(ping))
-			return (-1);
+		{
+			if (ping->exit > EX__BASE)
+				return (-1);
+		}
 		++seq;
 	}
 	return (0);

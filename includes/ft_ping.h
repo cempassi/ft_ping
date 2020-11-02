@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 05:03:31 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/01 18:28:48 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 01:23:00 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@
 
 #define OPTSTR "c:i:m:s:qvho"
 
-#define PING_INTERUPT 0x0001
+#define PING_INTERUPT 	0x0001
+#define PING_ALARM 		0x0002
 
 #define OPT_H 0x0001
 #define OPT_V 0x0002
@@ -169,8 +170,7 @@ int 		delay(t_ping *ping);
 
 uint16_t 	checksum(void *addr, int count);
 double 		square_root(double number);
-
-void 		sig_interupt(int signo);
+void 		sig_handler(int signo);
 
 int 		validate_checksum(t_packet *packet, uint32_t packet_size);
 int 		validate_recv(t_ping *ping, char *buffer, int recieved);

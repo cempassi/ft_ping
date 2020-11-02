@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 02:05:55 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/01 16:34:52 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 01:23:23 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ int init_prgm(t_ping *ping, int ac, char **av)
 	setbuf(stdout, NULL);
 	ft_bzero(&option, sizeof(t_opt));
 	init_ping(ping, av);
-	signal(SIGINT, &sig_interupt);
+	signal(SIGINT, sig_handler);
+	signal(SIGALRM, sig_handler);
 	option.optstr = OPTSTR;
 	optarg = NULL;
 	if ((error = ft_getopt(ac, av, &option, &optarg)) != 0)

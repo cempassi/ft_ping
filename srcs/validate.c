@@ -6,7 +6,7 @@
 /*   By: cedricmpassi <cempassi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/28 16:33:11 by cedricmpa         #+#    #+#             */
-/*   Updated: 2020/11/01 19:11:51 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 01:09:31 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,6 @@ int validate_recv(t_ping *ping, char *buffer, int recieved)
 	t_packet *packet;
 
 	packet = (t_packet *)(buffer + 20);
-	if (recieved < 0)
-	{
-		if (errno == EAGAIN)
-			ft_dprintf(STDERR_FILENO, "Timeout\n");
-		return (-1);
-	}
 	if (packet->header.type != ICMP_ECHOREPLY)
 	{
 		if (packet->header.type == ICMP_UNREACH)
@@ -96,7 +90,6 @@ int validate_send(t_ping *ping, int16_t sent)
 {
 	if (sent < 0)
 	{
-		ping->exit = EX_IOERR;
 		if (sent == EPERM)
 			ft_dprintf(STDERR_FILENO, "%s: sendto: Operation not permitted\n",
 					ping->name);
@@ -107,7 +100,7 @@ int validate_send(t_ping *ping, int16_t sent)
 			ft_dprintf(STDERR_FILENO, "%s: sendto: Permission denied\n",
 					ping->name);
 		else
-			ft_dprintf(2, "%s: sendto: Error code %d\n", ping->name, sent);
+			ft_dprintf(2, "%s: sendto: Socket is not connected\n", ping->name);
 		return (-1);
 	}
 	return (sent);
@@ -118,8 +111,6 @@ int validate_checksum(t_packet *packet, uint32_t packet_size)
 	uint32_t expected_sum;
 	uint32_t sum;
 
-	if (packet->header.type != ICMP_ECHOREPLY)
-		return (0);
 	expected_sum = packet->header.checksum;
 	packet->header.checksum = 0;
 	sum = checksum(packet, packet_size);

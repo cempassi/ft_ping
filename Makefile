@@ -6,7 +6,7 @@
 #    By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/07/22 04:47:46 by cempassi          #+#    #+#              #
-#    Updated: 2020/10/30 18:20:20 by cedricmpa        ###   ########.fr        #
+#    Updated: 2020/11/02 01:23:34 by cedricmpa        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,7 +54,6 @@ SRCM += ft_ping.c
 SRCM += init.c
 SRCM += packet_io.c
 SRCM += utils.c
-SRCM += signals.c
 SRCM += display.c
 SRCM += list.c
 SRCM += socket.c

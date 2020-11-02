@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 10:20:21 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/01 18:25:59 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 01:16:45 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <sys/time.h>
 #include <sysexits.h>
+#include <unistd.h>
 
 int 	send_packet(t_ping *ping, t_addrinfo *host, t_packet *packet)
 {
@@ -55,7 +56,7 @@ static int setup_message(t_msghdr *message, struct iovec *vector, char *buffer)
 	return (0);
 }
 
-static int handle_packet(t_ping *ping, t_packet *packet)
+static int process_packet(t_ping *ping, t_packet *packet)
 {
 	if(!ft_lstmove_if(&ping->sent, &ping->recv, packet, packet_cmp))
 	{
@@ -71,6 +72,15 @@ static int handle_packet(t_ping *ping, t_packet *packet)
 	}
 }
 
+static int await_packet(t_ping *ping, struct msghdr *message)
+{
+	int recieved;
+
+	while ((g_sign & PING_ALARM) == 0 && recieved <= 0)
+		recieved = recvmsg(ping->socket.fd, message, 0);
+	return (0);
+}
+
 int recv_packet(t_ping *ping)
 {
 	struct msghdr message;
@@ -81,14 +91,13 @@ int recv_packet(t_ping *ping)
 
 	setup_message(&message, vector, buffer);
 	packet = (t_packet *)(buffer + 20);
-	recieved = recvmsg(ping->socket.fd, &message, 0);
 	if (validate_recv(ping, buffer, recieved) == 0)
 	{
 		if (get_time(ping, &((t_time *)packet->payload)->recv))
 			return (-1);
 		if ((ping->options & OPT_Q) == 0)
 			display_recv(ping, (t_iphdr *)buffer, packet);
-		return(handle_packet(ping, packet));
+		return(process_packet(ping, packet));
 	}
 	return (0);
 }
