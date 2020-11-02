@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 10:20:21 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/02 03:04:22 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 04:20:35 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ static int 	setup_message(t_msghdr *message, struct iovec *vector, char *buffer)
 	vector[0].iov_len = MTU;
 	return (0);
 }
+
 
 static int 	process_packet(t_ping *ping, t_packet *packet)
 {
@@ -98,6 +99,7 @@ int 		send_packet(t_ping *ping, t_addrinfo *host, t_packet *packet)
 	packet_size = ping->payload_size + ICMP_HEADER_LEN;
 	sent = sendto(ping->socket.fd, packet, packet_size, 0, host->ai_addr,
 			host->ai_addrlen);
+	ping->stats.sent += 1;
 	if (validate_send(ping, sent) > 0)
 	{
 		if ((node = ft_lstnew(packet, sizeof(t_packet))) == NULL)
@@ -107,8 +109,7 @@ int 		send_packet(t_ping *ping, t_addrinfo *host, t_packet *packet)
 			return (-1);
 		}
 		ft_lstadd(&ping->sent, node);
-		ping->stats.sent += 1;
 		return (0);
 	}
-	return (-1);
+	return (0);
 }

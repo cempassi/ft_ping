@@ -6,7 +6,7 @@
 /*   By: cedricmpassi <cempassi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/28 16:33:11 by cedricmpa         #+#    #+#             */
-/*   Updated: 2020/11/02 04:10:31 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/02 04:18:43 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ static void 	time_exceeded(t_iphdr *iphdr, t_timexceed *packet, int recieved)
 			, ft_strlen(pack_dst) / 2, pack_dst);
 	return;
 }
+
 
 int 			validate_recv(t_ping *ping, char *buffer, int recieved)
 {
