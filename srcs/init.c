@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 02:05:55 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/03 02:35:29 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/03 02:55:04 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ int 		init_prgm(t_ping *ping, int ac, char **av)
 			ft_dprintf(2, "%s: illegal option -- -%c\n", av[0], error);
 		return (-1);
 	}
-	ft_printf("option.first_arg: %d, ac - 1: %d\n", option.first_arg, ac - 1);
 	if (option.first_arg != (size_t)ac - 1)
 	{
 		ping->exit = EX_USAGE;
