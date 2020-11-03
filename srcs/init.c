@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 02:05:55 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/03 01:39:11 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/03 02:05:50 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <sysexits.h>
 #include <stdio.h>
 
-static int 	check_arg(t_ping *ping, uint8_t opt, uint64_t number)
+static int 	check_arg(t_ping *ping, uint8_t opt, int64_t number)
 {
 	int e;
 
