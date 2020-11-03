@@ -6,7 +6,7 @@
 #    By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/07/22 04:47:46 by cempassi          #+#    #+#              #
-#    Updated: 2020/11/03 01:42:18 by cedricmpa        ###   ########.fr        #
+#    Updated: 2020/11/03 02:26:59 by cedricmpa        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -91,7 +91,7 @@ debug : $(NAMEDB)
 
 #Normal compilation
 $(NAME):  $(LIB) $(PATHO) $(OBJM) $(OBJS) $(INCS)
-	$(CC)  -o $@ $(LIB) $(OBJS) $(OBJM)
+	$(CC) $(IFLAGS) $(OBJS) $(OBJM) $(LIB) -o $@
 	printf "$(GREEN)$@ is ready.\n$(NC)"
 	
 $(OBJS) : $(PATHO)%.o : %.c $(INCS)
