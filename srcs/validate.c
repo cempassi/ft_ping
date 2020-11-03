@@ -6,7 +6,7 @@
 /*   By: cedricmpassi <cempassi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/28 16:33:11 by cedricmpa         #+#    #+#             */
-/*   Updated: 2020/11/02 04:18:43 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/03 00:29:50 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static char 	*dst_unreachable(int code)
 	return (msg[code]);
 }
 
-static void 	time_exceeded(t_iphdr *iphdr, t_timexceed *packet, int recieved)
+static void 	time_exceed(t_iphdr *iphdr, t_timexceed *packet, int recieved)
 {
 	char src[INET_ADDRSTRLEN];
 	char pack_src[INET_ADDRSTRLEN];
@@ -66,7 +66,6 @@ static void 	time_exceeded(t_iphdr *iphdr, t_timexceed *packet, int recieved)
 	return;
 }
 
-
 int 			validate_recv(t_ping *ping, char *buffer, int recieved)
 {
 	t_packet *packet;
@@ -80,7 +79,8 @@ int 			validate_recv(t_ping *ping, char *buffer, int recieved)
 			ft_dprintf(2, "%s\n", dst_unreachable(packet->header.code));
 		else if (packet->header.type == ICMP_TIMXCEED)
 		{
-			time_exceeded((t_iphdr *)buffer, (t_timexceed *)packet, recieved);
+			if (ping->options & OPT_V)
+				time_exceed((t_iphdr *)buffer, (t_timexceed *)packet, recieved);
 			recv_packet(ping);
 		}
 		return (-1);

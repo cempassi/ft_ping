@@ -6,11 +6,11 @@
 #    By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/07/22 04:47:46 by cempassi          #+#    #+#              #
-#    Updated: 2020/11/02 01:23:34 by cedricmpa        ###   ########.fr        #
+#    Updated: 2020/11/03 01:42:18 by cedricmpa        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-CC = Clang
+CC = clang
 COMPILE = $(CC) -c
 DEBUG = $(CC) -g -c
 

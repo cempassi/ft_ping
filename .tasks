@@ -1,5 +1,5 @@
 [run]
-command:c=make && sudo ./$(VIM_PRONAME) -c 10 -s 0 192.168.1.255
+command:c,cpp,make=make && sudo ./$(VIM_PRONAME) -c 10 -s 0 192.168.1.255
 cwd=<root>
 output=terminal
 save=2

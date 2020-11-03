@@ -6,7 +6,7 @@
 /*   By: cedricmpassi <cempassi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/27 22:20:09 by cedricmpa         #+#    #+#             */
-/*   Updated: 2020/11/02 03:01:29 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/03 00:27:55 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int 	init_socket(t_ping *ping)
 	if ((sock->fd = socket(PF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0)
 	{
 		ping->exit = EX_OSERR;
-		ft_dprintf(STDERR_FILENO, "%s: Socket allocation failed\n", ping->name);
+		ft_dprintf(STDERR_FILENO, "%s: Needs priviledged access\n", ping->name);
 		return (-1);
 	}
 	return (set_socket_opt(ping) < 0 ? -1 : 0);

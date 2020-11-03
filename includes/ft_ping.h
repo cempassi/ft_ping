@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 05:03:31 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/02 04:09:15 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/03 01:26:07 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,11 @@
 #define OPT_Q 0x0080
 
 #define OPT_C_ERROR "-c [NUMBER]"
+#define OPT_C_E_STR "invalid count of packets to transmit: "
 #define OPT_I_ERROR "-i [NUMBER]"
+#define OPT_I_E_STR "Invalid Timing interval: "
 #define OPT_M_ERROR "-m [NUMBER]"
+#define OPT_M_E_STR "Invalid TTL: "
 #define OPT_S_ERROR "-s [NUMBER]"
 
 #define ICMP_ECHO_CODE 0
@@ -52,6 +55,9 @@
 #define ICMP_TOS 0
 #define MTU 1500
 #define HOST_LEN 256
+
+#define MAX_DELAY 1000
+#define MAX_TTL 255
 
 #define DESC_C "-c count: Stop after sending (and recieving) count packets."
 #define DESC_I "-i wait: Wait ait seconds between sending each packet."

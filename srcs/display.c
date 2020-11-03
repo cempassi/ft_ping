@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 13:19:10 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/01 17:56:55 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/03 01:53:48 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void 			display_start(t_ping *ping, struct addrinfo *host)
 	address = (struct sockaddr_in *)host->ai_addr;
 	data = ping->payload_size;
 	inet_ntop(AF_INET, &address->sin_addr, host_ip, INET_ADDRSTRLEN);
-	ft_printf("PING %s (%s): %d bytes of data\n", ping->host, host_ip, data);
+	ft_printf("PING %s (%s): %d data bytes\n", ping->host, host_ip, data);
 }
 
 static void 	display_rtt(t_ping *ping)

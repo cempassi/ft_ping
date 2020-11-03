@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 10:20:21 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/02 04:20:35 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/03 00:28:15 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static int 	setup_message(t_msghdr *message, struct iovec *vector, char *buffer)
 	vector[0].iov_len = MTU;
 	return (0);
 }
-
 
 static int 	process_packet(t_ping *ping, t_packet *packet)
 {

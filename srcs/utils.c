@@ -6,15 +6,14 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/16 07:26:33 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/02 04:09:31 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/03 01:32:45 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
 #include <arpa/inet.h>
 #include <stdint.h>
-#include <sys/select.h>
-#include <sys/time.h>
+#include <signal.h>
 #include <sysexits.h>
 
 uint16_t 	checksum(void *addr, int count)
