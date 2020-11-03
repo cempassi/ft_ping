@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 13:19:10 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/03 02:45:20 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/03 02:56:24 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void 			display_recv(t_ping *ping, t_iphdr *iph, t_packet *packet)
 void 			display_help(char *name)
 {
 	ft_dprintf(STDERR_FILENO, "usage: %s [-hoqv] [-c count] ", name);
-	ft_dprintf(STDERR_FILENO, "[-i wait] [-m ttl] [-s packetsize]\n");
+	ft_dprintf(STDERR_FILENO, "[-i wait] [-m ttl] [-s packetsize] host\n");
 	ft_dprintf(STDERR_FILENO, "\t%s\n", DESC_C);
 	ft_dprintf(STDERR_FILENO, "\t%s\n", DESC_I);
 	ft_dprintf(STDERR_FILENO, "\t%s\n", DESC_M);
