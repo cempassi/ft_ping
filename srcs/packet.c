@@ -6,7 +6,7 @@
 /*   By: cedricmpassi <cempassi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/28 00:53:27 by cedricmpa         #+#    #+#             */
-/*   Updated: 2020/11/08 08:18:22 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/08 10:11:59 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,8 @@ t_packet *generate_packet(t_ping *ping)
 {
 	t_packet *packet;
 	size_t	  packet_size;
-	size_t	  payload_size;
 
-	if (ping->payload_size > MAX_PAYLOAD_SIZE)
-		payload_size = MAX_PAYLOAD_SIZE;
-	else
-		payload_size = ping->payload_size;
-	packet_size = payload_size + ICMP_HEADER_LEN;
+	packet_size = get_packet_size(ping);
 	if ((packet = ft_memalloc(packet_size)) == NULL)
 	{
 		ping->exit = EX_USAGE;
@@ -58,6 +53,6 @@ t_packet *generate_packet(t_ping *ping)
 	packet->header.type = ICMP_ECHO;
 	packet->header.code = ICMP_ECHO_CODE;
 	packet->header.echo.id = getpid();
-	generate_payload(ping, packet, payload_size);
+	generate_payload(ping, packet, packet_size - ICMP_HEADER_LEN);
 	return (packet);
 }

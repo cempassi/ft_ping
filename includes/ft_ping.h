@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/22 05:03:31 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/08 08:16:33 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/08 10:09:12 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,7 @@ int 		calculate_stats(t_ping *ping, t_packet *packet);
 int 		get_time(t_ping *ping, struct timeval *current);
 int 		delay(t_ping *ping);
 
+size_t 		get_packet_size(t_ping *ping);
 uint16_t 	checksum(void *addr, int count);
 double 		square_root(double number);
 void 		sig_handler(int signo);

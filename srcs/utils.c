@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/16 07:26:33 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/03 01:32:45 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/08 10:08:58 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,15 @@ char 		*reverse_dns(char *str)
 		return (NULL);
 	}
 	return (ft_strdup(buffer));
+}
+
+size_t 		get_packet_size(t_ping *ping)
+{
+	size_t packet_size;
+
+	if (ping->payload_size > MAX_PAYLOAD_SIZE)
+		packet_size = MAX_PAYLOAD_SIZE + ICMP_HEADER_LEN;
+	else
+		packet_size = ping->payload_size + ICMP_HEADER_LEN;
+	return (packet_size);
 }

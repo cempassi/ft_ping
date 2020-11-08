@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 10:24:11 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/08 08:04:01 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/08 10:19:47 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static int ping_loop(t_ping *ping, t_addrinfo *host, t_packet *packet)
 	t_time	 *time;
 	size_t packet_size;
 
-	packet_size = ping->payload_size + ICMP_HEADER_LEN;
+	packet_size = get_packet_size(ping);
 	time = (t_time *)packet->payload;
 	while (validate_ping(ping, ping->seq) == 0)
 	{

@@ -6,7 +6,7 @@
 /*   By: cedricmpassi <cempassi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/30 18:18:55 by cedricmpa         #+#    #+#             */
-/*   Updated: 2020/11/08 08:04:01 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/08 10:13:15 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int 	get_time(t_ping *ping, struct timeval *current)
 {
 	size_t packet_size;
 
-	packet_size = ping->payload_size + ICMP_HEADER_LEN;
+	packet_size = get_packet_size(ping);
 	if (packet_size < TIME_DATA + ICMP_HEADER_LEN)
 		return (0);
 	if (gettimeofday(current, NULL))

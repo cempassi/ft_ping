@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 10:20:21 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/08 08:17:24 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/08 10:14:58 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,7 @@ int send_packet(t_ping *ping, t_addrinfo *host, t_packet *packet)
 	t_list *node;
 	size_t packet_size;
 
-	if (ping->payload_size > MAX_PAYLOAD_SIZE)
-		packet_size = MAX_PAYLOAD_SIZE + ICMP_HEADER_LEN;
-	else
-		packet_size = ping->payload_size + ICMP_HEADER_LEN;
+	packet_size = get_packet_size(ping);
 	send = sendto(ping->socket.fd, packet, packet_size, 0, host->ai_addr,
 				  host->ai_addrlen);
 	ping->stats.sent += 1;
