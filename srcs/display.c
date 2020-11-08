@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 13:19:10 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/03 02:56:24 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/08 08:17:35 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,10 @@ void 			display_recv(t_ping *ping, t_iphdr *iph, t_packet *packet)
 
 	inet_ntop(AF_INET, &iph->saddr, src, INET_ADDRSTRLEN);
 	time = (t_time *)packet->payload;
-	packet_size = ping->payload_size + ICMP_HEADER_LEN;
+	if (ping->payload_size > MAX_PAYLOAD_SIZE)
+		packet_size = MAX_PAYLOAD_SIZE + ICMP_HEADER_LEN;
+	else
+		packet_size = ping->payload_size + ICMP_HEADER_LEN;
 	if((host = reverse_dns(src)) == NULL)
 	{
 		ping->exit = EX_OSERR;
@@ -33,6 +36,8 @@ void 			display_recv(t_ping *ping, t_iphdr *iph, t_packet *packet)
 	ft_printf("%lu bytes from %s (%s): icmp_seq=%u ttl=%d ",
 			packet_size, host, src, packet->header.echo.seq, iph->ttl);
 	ft_strdel(&host);
+	if (ping->payload_size > MAX_PAYLOAD_SIZE)
+		ft_dprintf(2, "%s %d\n", OPT_S_E_STR, ping->payload_size);
 	if (ping->payload_size >= TIME_DATA)
 		printf("time=%.3lf ms", duration(time));
 	ft_putchar('\n');

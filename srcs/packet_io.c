@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 10:20:21 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/03 00:28:15 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/08 08:17:24 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,17 +89,20 @@ int 		recv_packet(t_ping *ping)
 	return (recieved < 0 ? -1 : 0);
 }
 
-int 		send_packet(t_ping *ping, t_addrinfo *host, t_packet *packet)
+int send_packet(t_ping *ping, t_addrinfo *host, t_packet *packet)
 {
-	int16_t sent;
+	int16_t send;
 	t_list *node;
 	size_t packet_size;
 
-	packet_size = ping->payload_size + ICMP_HEADER_LEN;
-	sent = sendto(ping->socket.fd, packet, packet_size, 0, host->ai_addr,
-			host->ai_addrlen);
+	if (ping->payload_size > MAX_PAYLOAD_SIZE)
+		packet_size = MAX_PAYLOAD_SIZE + ICMP_HEADER_LEN;
+	else
+		packet_size = ping->payload_size + ICMP_HEADER_LEN;
+	send = sendto(ping->socket.fd, packet, packet_size, 0, host->ai_addr,
+				  host->ai_addrlen);
 	ping->stats.sent += 1;
-	if (validate_send(ping, sent) > 0)
+	if (validate_send(ping, send) > 0)
 	{
 		if ((node = ft_lstnew(packet, sizeof(t_packet))) == NULL)
 		{

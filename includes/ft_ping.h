@@ -42,6 +42,7 @@
 #define OPT_M_ERROR "-m [NUMBER]"
 #define OPT_M_E_STR "Invalid TTL: "
 #define OPT_S_ERROR "-s [NUMBER]"
+#define OPT_S_E_STR "wrong total length, 88 instead of"
 
 #define ICMP_ECHO_CODE 0
 #define ICMP_HEADER_LEN 8
@@ -58,6 +59,7 @@
 
 #define MAX_DELAY 1000
 #define MAX_TTL 255
+#define MAX_PAYLOAD_SIZE 68
 
 #define DESC_C "-c count: Stop after sending (and recieving) count packets."
 #define DESC_I "-i wait: Wait ait seconds between sending each packet."

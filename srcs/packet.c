@@ -6,22 +6,20 @@
 /*   By: cedricmpassi <cempassi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/28 00:53:27 by cedricmpa         #+#    #+#             */
-/*   Updated: 2020/10/28 19:26:57 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/08 08:04:01 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
 #include <sysexits.h>
 
-static void generate_payload(t_ping *ping, t_packet *packet)
+static void generate_payload(t_ping *ping, t_packet *packet, size_t size)
 {
-	size_t size;
 	size_t to_copy;
 	size_t payload_len;
 	size_t time;
 
 	time = 0;
-	size = ping->payload_size;
 	if (size >= TIME_DATA)
 	{
 		time = TIME_DATA;
@@ -43,9 +41,14 @@ static void generate_payload(t_ping *ping, t_packet *packet)
 t_packet *generate_packet(t_ping *ping)
 {
 	t_packet *packet;
-	size_t packet_size;
+	size_t	  packet_size;
+	size_t	  payload_size;
 
-	packet_size = ping->payload_size + ICMP_HEADER_LEN;
+	if (ping->payload_size > MAX_PAYLOAD_SIZE)
+		payload_size = MAX_PAYLOAD_SIZE;
+	else
+		payload_size = ping->payload_size;
+	packet_size = payload_size + ICMP_HEADER_LEN;
 	if ((packet = ft_memalloc(packet_size)) == NULL)
 	{
 		ping->exit = EX_USAGE;
@@ -55,6 +58,6 @@ t_packet *generate_packet(t_ping *ping)
 	packet->header.type = ICMP_ECHO;
 	packet->header.code = ICMP_ECHO_CODE;
 	packet->header.echo.id = getpid();
-	generate_payload(ping, packet);
+	generate_payload(ping, packet, payload_size);
 	return (packet);
 }
