@@ -6,7 +6,7 @@
 /*   By: cempassi <cempassi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 02:05:55 by cempassi          #+#    #+#             */
-/*   Updated: 2020/11/03 02:55:04 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/08 08:15:09 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,16 @@
 #include <sysexits.h>
 #include <stdio.h>
 
-static int 	check_arg(t_ping *ping, uint8_t opt, int64_t number)
+static int 	check_arg(t_ping *ping, int64_t number)
 {
 	int e;
 
 	e = 0;
-	if (opt == OPT_C && (number < 0 || number > INT32_MAX))
+	if (ping->count > INT32_MAX)
 		e = ft_dprintf(2, "%s: %s `%d`\n", ping->name, OPT_C_E_STR, number);
-	else if (opt == OPT_M && (number < 0 || number > MAX_TTL))
+	else if (ping->socket.ttl > MAX_TTL)
 		e = ft_dprintf(2, "%s: %s `%d`\n", ping->name, OPT_M_E_STR, number);
-	else if (opt == OPT_I && (number < 0 || number > MAX_DELAY))
+	else if (ping->interval > MAX_DELAY)
 		e = ft_dprintf(2, "%s: %s `%d`\n", ping->name, OPT_I_E_STR, number);
 	if (e)
 		ping->exit = EX_USAGE;
@@ -44,7 +44,7 @@ static int 	get_argument(t_ping *ping, char *optarg, uint8_t opt, char o)
 	}
 	convert = ft_atoi(optarg);
 	ping->options |= opt;
-	return (check_arg(ping, opt, convert));
+	return (check_arg(ping, convert));
 }
 
 static int 	parse_opt(t_ping *ping, t_opt *option, int ac, char **av)

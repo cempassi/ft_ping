@@ -6,7 +6,7 @@
 /*   By: cedricmpassi <cempassi@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/30 18:18:55 by cedricmpa         #+#    #+#             */
-/*   Updated: 2020/11/02 03:02:31 by cedricmpa        ###   ########.fr       */
+/*   Updated: 2020/11/08 08:04:01 by cedricmpa        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,4 +88,3 @@ int 	delay(t_ping *ping)
 	}
 	return (0);
 }
-
