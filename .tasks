@@ -1,5 +1,0 @@
-[run]
-command:c,cpp,make=make && sudo ./$(VIM_PRONAME) -s 200 google.fr
-cwd=<root>
-output=terminal
-save=2
